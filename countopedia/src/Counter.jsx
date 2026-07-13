@@ -3,7 +3,12 @@ function Counter() {
   return (
     <div className="row text-white container">
       Counter:{count}
-      <button className="btn btn-success m-2">+1</button>
+      <button
+        onClick={() => alert("Button was clicked")}
+        className="btn btn-success m-2"
+      >
+        +1
+      </button>
       <button className="btn btn-danger m-2">-1</button>
     </div>
   );
