@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import attackImage from "./images/attack.png";
 import defenceImage from "./images/defend.png";
 
@@ -9,27 +9,24 @@ function Counter() {
   function handleIncrement() {
     const newValue = count + 1;
     setCount(newValue);
-
-    if (newValue >= 5) {
-      setGameStatus("You Won!");
-    } else {
-      setGameStatus("");
-    }
   }
   function handleDecrement() {
     // setCount(function (prev) {   // OR  //setCount((prev) => prev - 1);
     //   return prev - 1;
     // });
-
     const newValue = count - 1;
     setCount(newValue);
+  }
 
-    if (newValue <= -5) {
+  useEffect(() => {
+    if (count <= -5) {
       setGameStatus("You Lost!");
+    } else if (count >= 5) {
+      setGameStatus("You Won!");
     } else {
       setGameStatus("");
     }
-  }
+  }, [count]);
 
   function handleRandomPlay() {
     const playMode = Math.round(Math.random());
