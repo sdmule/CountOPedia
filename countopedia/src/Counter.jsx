@@ -32,7 +32,7 @@ function Counter() {
   }
 
   function handleRandomPlay() {
-    const playMode = Math.round(Math.random);
+    const playMode = Math.round(Math.random());
     if (playMode == 0) {
       handleIncrement();
     } else {
