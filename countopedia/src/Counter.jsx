@@ -1,32 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import attackImage from "./images/attack.png";
 import defenceImage from "./images/defend.png";
 
 function Counter() {
-  let [count, setCount] = useState(0);
-  let [gameStatus, setGameStatus] = useState("");
+  const [gameState, setGameState] = useState({
+    count: 0,
+    gameStatus: "",
+  });
 
   function handleIncrement() {
-    const newValue = count + 1;
-    setCount(newValue);
+    const newCount = gameState.count + 1;
+    const status =
+      newCount >= 5 ? "You Won!" : newCount <= -5 ? "You Lost" : "";
+    setGameState({ count: newCount, gameStatus: status });
   }
   function handleDecrement() {
-    // setCount(function (prev) {   // OR  //setCount((prev) => prev - 1);
-    //   return prev - 1;
-    // });
-    const newValue = count - 1;
-    setCount(newValue);
+    const newCount = gameState.count - 1;
+    const status =
+      newCount >= 5 ? "You Won!" : newCount <= -5 ? "You Lost" : "";
+    setGameState({ count: newCount, gameStatus: status });
   }
-
-  useEffect(() => {
-    if (count <= -5) {
-      setGameStatus("You Lost!");
-    } else if (count >= 5) {
-      setGameStatus("You Won!");
-    } else {
-      setGameStatus("");
-    }
-  }, [count]);
 
   function handleRandomPlay() {
     const playMode = Math.round(Math.random());
@@ -38,20 +31,27 @@ function Counter() {
   }
 
   function handleReset() {
-    setCount(0);
+    setGameState({ gameStatus: "", count: 0 });
+    // setGameState((prev) => ({
+    //   ...prev,
+    //   gameStatus: "",
+    // }));
   }
 
   function handleLog() {
-    console.log(count);
+    console.log(gameState.count);
   }
 
   return (
     <div className="container">
       <div className="row text-white container">
-        <h1>Game Score:{count}</h1>
+        <h1>Game Score:{gameState.count}</h1>
         <p>You win at +5 points and lose at -5 points</p>
-        {/* <p>Last Play: </p> */}
-        <h3>Game Status : {gameStatus}</h3>
+
+        {gameState.gameStatus.length > 0 && (
+          <h3>Game Status : {gameState.gameStatus}</h3>
+        )}
+        {/* {gameStatus.length > 0 ? <h3>Game Status : {gameStatus}</h3> : null} */}
 
         <div className="col-6 col-md-3 offset-md-3">
           <img
@@ -86,7 +86,7 @@ function Counter() {
           </button>
           <br />
           <button className="btn btn-danger m-2 w-100" onClick={handleReset}>
-            Reset Game Score
+            Reset
           </button>
           <br />
           <button className="btn btn-warning m-2 w-100" onClick={handleLog}>
