@@ -5,13 +5,17 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm ci'
+                dir('countopedia') {
+                    bat 'npm ci'
+                }
             }
         }
 
         stage('Build') {
             steps {
-                bat 'npm run build'
+                dir('countopedia') {
+                    bat 'npm run build'
+                }
             }
         }
 
