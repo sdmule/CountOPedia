@@ -19,5 +19,13 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+                dir('countopedia') {
+                    bat 'docker build -t countopedia:latest .'
+                }
+            }
+        }
+
     }
 }
