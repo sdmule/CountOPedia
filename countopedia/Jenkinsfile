@@ -96,7 +96,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy Environment') {
             steps {
                 script {
 
