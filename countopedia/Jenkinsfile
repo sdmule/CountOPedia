@@ -27,31 +27,35 @@ pipeline {
 
                         if (env.BRANCH_NAME == 'dev') {
 
-                            bat 'docker build -t countopedia:dev-%BUILD_NUMBER% .'
+                            bat "docker build -t countopedia:dev-%BUILD_NUMBER% ."
+
+                        } else if (env.BRANCH_NAME == 'test') {
+
+                            bat "docker build -t countopedia:test-%BUILD_NUMBER% ."
+
+                        } else if (env.BRANCH_NAME == 'stage') {
+
+                            bat "docker build -t countopedia:stage-%BUILD_NUMBER% ."
+
+                        } else if (env.BRANCH_NAME == 'main') {
+
+                            bat "docker build -t countopedia:prod-%BUILD_NUMBER% ."
+
+                        } else if (env.BRANCH_NAME == 'release/CICD') {
+
+                            bat "docker build -t countopedia:release-%BUILD_NUMBER% ."
+
+                        } else {
+
+                            echo "No Docker build configuration for branch: ${env.BRANCH_NAME}"
 
                         }
-                        else if (env.BRANCH_NAME == 'test') {
-
-                            bat 'docker build -t countopedia:test-%BUILD_NUMBER% .'
-
-                        }
-                        else if (env.BRANCH_NAME == 'stage') {
-
-                            bat 'docker build -t countopedia:stage-%BUILD_NUMBER% .'
-
-                        }
-                        else if (env.BRANCH_NAME == 'main') {
-
-                            bat 'docker build -t countopedia:prod-%BUILD_NUMBER% .'
-
-                        }
-
                     }
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy Environment') {
             steps {
                 script {
 
@@ -63,8 +67,7 @@ pipeline {
                             docker run -d --name countopedia-dev -p 8081:80 countopedia:dev-%BUILD_NUMBER%
                         '''
 
-                    }
-                    else if (env.BRANCH_NAME == 'test') {
+                    } else if (env.BRANCH_NAME == 'test') {
 
                         bat '''
                             docker stop countopedia-test || echo Container does not exist
@@ -72,8 +75,7 @@ pipeline {
                             docker run -d --name countopedia-test -p 8082:80 countopedia:test-%BUILD_NUMBER%
                         '''
 
-                    }
-                    else if (env.BRANCH_NAME == 'stage') {
+                    } else if (env.BRANCH_NAME == 'stage') {
 
                         bat '''
                             docker stop countopedia-stage || echo Container does not exist
@@ -81,32 +83,25 @@ pipeline {
                             docker run -d --name countopedia-stage -p 8083:80 countopedia:stage-%BUILD_NUMBER%
                         '''
 
-                    }
-                    else if (env.BRANCH_NAME == 'main') {
+                    } else if (env.BRANCH_NAME == 'main') {
 
                         bat '''
                             docker stop countopedia-prod || echo Container does not exist
                             docker rm countopedia-prod || echo Container does not exist
-                            docker run -d --name countopedia-prod -p 8084:80 countopedia:prod-%BUILD_NUMBER%
+                            docker run -d --name countopedia-prod -p 8080:80 countopedia:prod-%BUILD_NUMBER%
                         '''
 
-                    }
+                    } else if (env.BRANCH_NAME == 'release/CICD') {
 
-                }
-            }
-        }
+                        bat '''
+                            docker stop countopedia-release || echo Container does not exist
+                            docker rm countopedia-release || echo Container does not exist
+                            docker run -d --name countopedia-release -p 8084:80 countopedia:release-%BUILD_NUMBER%
+                        '''
 
-        stage('Deploy') {
-            steps {
-                script {
+                    } else {
 
-                    if (env.BRANCH_NAME == 'dev') {
-
-                       bat '''
-                    docker stop countopedia-dev || echo Container does not exist
-                    docker rm countopedia-dev || echo Container does not exist
-                    docker run -d --name countopedia-dev -p 8081:80 countopedia:%BUILD_NUMBER%
-                '''
+                        echo "No deployment configuration for branch: ${env.BRANCH_NAME}"
 
                     }
                 }
