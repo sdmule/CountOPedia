@@ -1,4 +1,5 @@
 pipeline {
+
     agent any
 
     stages {
@@ -95,5 +96,21 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                script {
+
+                    if (env.BRANCH_NAME == 'dev') {
+
+                       bat '''
+                    docker stop countopedia-dev || echo Container does not exist
+                    docker rm countopedia-dev || echo Container does not exist
+                    docker run -d --name countopedia-dev -p 8081:80 countopedia:%BUILD_NUMBER%
+                '''
+
+                    }
+                }
+            }
+        }
     }
 }
