@@ -96,7 +96,7 @@ pipeline {
                         bat '''
                             docker stop countopedia-release || echo Container does not exist
                             docker rm countopedia-release || echo Container does not exist
-                            docker run -d --name countopedia-release -p 8084:80 countopedia:release-%BUILD_NUMBER%
+                            docker run -d --name countopedia-release -p 8085:80 countopedia:release-%BUILD_NUMBER%
                         '''
 
                     } else {
