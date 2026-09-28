@@ -12,6 +12,14 @@ pipeline {
             }
         }
 
+        stage('Unit Tests & Code Coverage') {
+            steps {
+                dir('countopedia') {
+                    bat 'npm test -- --coverage --runInBand'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 dir('countopedia') {
